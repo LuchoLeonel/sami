@@ -1,0 +1,42 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_OPTIONS='-r tsconfig-paths/register' node dist/server.js",
+    "dev": "NODE_OPTIONS='-r tsconfig-paths/register' ts-node src/server.ts",
+    "build": "tsc",
+    "test": "ts-node src/test.ts",
+    "test1": "ts-node src/test1.ts",
+    "test2": "ts-node src/test2.ts",
+    "test3": "ts-node src/test3.ts",
+    "test4": "ts-node src/test4.ts",
+    "test5": "ts-node src/test5.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.48.0",
+    "axios": "^1.8.1",
+    "bullmq": "^5.39.0",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5",
+    "express": "^4.21.2",
+    "ioredis": "^5.4.2",
+    "lodash": "^4.17.21",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "tsconfig-paths": "^4.2.0",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/lodash": "^4",
+    "@types/node": "^22.10.5",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}

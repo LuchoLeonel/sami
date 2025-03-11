@@ -1,0 +1,111 @@
+name: Build & Deploy
+env:
+  IMAGE_TAG_BACKEND: ghcr.io/fabian416/sami/backend
+  IMAGE_TAG_FRONTEND: ghcr.io/fabian416/sami/frontend
+  IMAGE_TAG_AI_AGENT: ghcr.io/fabian416/sami/ai-agent
+
+  IMAGE_VERSION: ${{ github.ref == 'refs/heads/main' && 'latest' || 'staging' }}
+  NEXT_PUBLIC_ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+jobs:
+  build_backend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Buildx Install
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Backend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.backend
+          push: true
+          tags: ${{env.IMAGE_TAG_BACKEND}}:${{env.IMAGE_VERSION}}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args:
+            NEXT_PUBLIC_ENVIRONMENT=${{ env.NEXT_PUBLIC_ENVIRONMENT }}
+
+  build_frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Enable Corepack & Set Yarn version
+        run: |
+          corepack enable
+          corepack prepare yarn@3.2.3 --activate
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Buildx Install
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Frontend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile.frontend
+          push: true
+          tags: ${{env.IMAGE_TAG_FRONTEND}}:${{env.IMAGE_VERSION}}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args:
+            NEXT_PUBLIC_ENVIRONMENT=${{ env.NEXT_PUBLIC_ENVIRONMENT }}
+
+  build_ai_agent:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Buildx Install
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push AI Agent Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./packages/eliza
+          file: ./packages/eliza/Dockerfile
+          push: true
+          tags: ${{env.IMAGE_TAG_AI_AGENT}}:${{env.IMAGE_VERSION}}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

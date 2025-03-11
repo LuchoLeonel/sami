@@ -1,0 +1,22 @@
+{
+        {$CADDY_GLOBAL_OPTIONS}
+}
+
+{$CADDY_EXTRA_CONFIG}
+
+
+{$SAMI_SITE} {
+        reverse_proxy frontend:3001
+}
+
+{$SAMI_API} {
+        reverse_proxy backend:5001
+}
+
+{$STAGING_SAMI_SITE} {
+        reverse_proxy staging-frontend:4001
+}
+
+{$STAGING_SAMI_API} {
+        reverse_proxy staging-backend:6001
+}
