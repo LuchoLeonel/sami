@@ -1,18 +1,9 @@
 import { useEffect, useState } from "react";
 import { TokenLogo } from "../Header";
-import { RainbowKitCustomConnectButton } from "../scaffold-eth";
 import { ModalWaitingForPlayers } from "./ModalWaitingForPlayers";
 import { ModalWaitingForTransaction } from "./ModalWaitingForTransaction";
 import { v4 as uuidv4 } from "uuid";
-import { useAccount } from "wagmi";
 import { useSocket } from "~~/app/socketContext";
-import {
-  useDeployedContractInfo,
-  useScaffoldReadContract,
-  useScaffoldWriteContract,
-  useTransactor,
-} from "~~/hooks/scaffold-eth";
-import { notification } from "~~/utils/scaffold-eth";
 
 interface Player {
   id: string;
@@ -30,6 +21,7 @@ export const ChooseGame = ({ showGame }: any) => {
   const [loadingBet, setLoadingBet] = useState(false);
   const [localAllowance, setLocalAllowance] = useState<bigint | null>(null);
   const { socket, isConnected, playerId, setPlayerId, setPlayerIndex, setRoomId } = useSocket();
+  /*
   const { address: connectedAddress } = useAccount();
   const transactor = useTransactor();
   const { writeContractAsync: USDCwriteContractAsync } = useScaffoldWriteContract({ contractName: "USDC" });
@@ -43,15 +35,15 @@ export const ChooseGame = ({ showGame }: any) => {
     functionName: "allowance",
     args: [connectedAddress, simpleSAMIContractData?.address],
     watch: true,
-  });
+  });*/
   const [isBetGame, setIsBetGame] = useState<boolean>(false);
-
+/*
   useEffect(() => {
     if (allowance !== undefined) {
       setLocalAllowance(allowance);
     }
   }, [allowance]);
-
+*/
   useEffect(() => {
     if (!socket) return;
     if (!playerId) return;
@@ -74,6 +66,7 @@ export const ChooseGame = ({ showGame }: any) => {
   }, [socket, showGame, setRoomId, playerId, setPlayerIndex]);
 
   const handleApprove = async () => {
+    /*
     if (!connectedAddress) {
       notification.error("Please connect your wallet");
       return;
@@ -101,9 +94,11 @@ export const ChooseGame = ({ showGame }: any) => {
       notification.error("Increasing allowance failed, please try again.");
     }
     setLoadingApprove(false);
+    */
   };
 
   const handleBetAndPlay = async () => {
+    /*
     if (!connectedAddress || !socket) {
       notification.error("Please connect your wallet");
       return;
@@ -153,6 +148,7 @@ export const ChooseGame = ({ showGame }: any) => {
       notification.error("Buying ticket failed, please try again.");
     }
     setLoadingBet(false);
+    */
   };
 
   const handleEnterGame = () => {
@@ -214,6 +210,7 @@ export const ChooseGame = ({ showGame }: any) => {
                 <span>If everyone loses, SAMI wins!</span>
               </p>
               <div className="card-actions justify-center">
+                {/*
                 {connectedAddress ? (
                   localAllowance && localAllowance >= BigInt(1 * DECIMALS) ? (
                     <>
@@ -233,8 +230,9 @@ export const ChooseGame = ({ showGame }: any) => {
                     </button>
                   )
                 ) : (
-                  <RainbowKitCustomConnectButton />
+                  <button />
                 )}
+                  */}
               </div>
             </div>
           </div>

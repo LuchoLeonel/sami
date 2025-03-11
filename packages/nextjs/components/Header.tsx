@@ -6,11 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { DECIMALS } from "./sami/ChooseGame";
 import { ModalInstructions } from "./sami/ModalInstructions";
-import { useAccount } from "wagmi";
 import { Bars3Icon } from "@heroicons/react/20/solid";
-import { FaucetButton, RainbowKitCustomConnectButtonOpaque } from "~~/components/scaffold-eth";
-import { useOutsideClick, useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
-import { notification } from "~~/utils/scaffold-eth";
 
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
 
@@ -77,7 +73,7 @@ export const HeaderMenuLinks = () => {
 export const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+/*
   const burgerMenuRef = useRef<HTMLDivElement>(null);
   useOutsideClick(
     burgerMenuRef,
@@ -94,7 +90,7 @@ export const Header = () => {
     args: [connectedAddress],
     watch: true,
   });
-
+*//*
   const handleMint = async () => {
     if (!connectedAddress) {
       notification.error("Please connect your wallet");
@@ -115,7 +111,7 @@ export const Header = () => {
       notification.error("Minting tokens failed, please try again.");
     }
   };
-
+*/
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -135,7 +131,9 @@ export const Header = () => {
   return (
     <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
       <div className="navbar-start w-auto lg:w-1/2">
-        <div className="lg:hidden dropdown" ref={burgerMenuRef}>
+        <div className="lg:hidden dropdown" >
+          {//ref={burgerMenuRef}>
+          }
           <label
             tabIndex={0}
             className={`ml-1 btn btn-ghost ${isDrawerOpen ? "hover:bg-secondary" : "hover:bg-transparent"}`}
@@ -171,6 +169,7 @@ export const Header = () => {
       </div>
       <div className="navbar-center hidden lg:flex flex-grow justify-center"></div>
       <div className="navbar-end flex-grow mr-4">
+        {/*
         {isConnected &&
           typeof balance !== "undefined" &&
           (ENVIRONMENT === "production" ? (
@@ -192,8 +191,7 @@ export const Header = () => {
               <span className="ml-1">{(Number(balance) / DECIMALS).toFixed(2)}</span>
             </span>
           ))}
-        <RainbowKitCustomConnectButtonOpaque />
-        <FaucetButton />
+            */}
       </div>
       <button
         className="btn btn-primary bg-[#1CA297] hover:bg-[#33B3A8] mr-2 text-white border-0 glow-cyan btn-sm text-xl"

@@ -1,17 +1,9 @@
 import { SocketProvider } from "./socketContext";
-import "@rainbow-me/rainbowkit/styles.css";
-import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
+import { AppWithProviders } from "~~/components/AppWithProviders";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
-import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
-export const metadata = getMetadata({
-  title: "SAMI - Play against AI",
-  description: "Bet on who do you think is the AI and earn a profit.",
-  imageRelativePath: "/thumbnail.jpg",
-});
-
-const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
+const SonicApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning>
       <head>
@@ -30,13 +22,13 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
       </head>
       <body>
         <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>
+          <AppWithProviders>
             <SocketProvider>{children}</SocketProvider>
-          </ScaffoldEthAppWithProviders>
+          </AppWithProviders>
         </ThemeProvider>
       </body>
     </html>
   );
 };
 
-export default ScaffoldEthApp;
+export default SonicApp;
