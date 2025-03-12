@@ -16,7 +16,6 @@ import {
     TOKEN_2022_PROGRAM_ID,
   
     ASSOCIATED_TOKEN_PROGRAM_ID,
-    createInitializeTransferFeeConfigInstruction,
     createInitializeMetadataPointerInstruction,
     setAuthority,
     AuthorityType,
@@ -39,7 +38,7 @@ import {
   
   const connection = getConnection();
   
-  export async function createNewTokenMainTest() {
+  export async function createNewTokenTest() {
     console.log('Generating keypairs...');
     
     const mintKeypair = Keypair.generate();
@@ -130,16 +129,16 @@ import {
     );
   }
   
-  export async function mintAndDistributeTokensMainTest() {
+  export async function mintAndDistributeTokensTest() {
     console.log("Minting and distributing tokens...");
   
     // Mint Address
-    const mintAddress = "GiYPuQkG7UHvxpb8oc2R4KYmhh5Uueu6m3EB1URMsDwq";
+    const mintAddress = "";
     const mintPublicKey = new PublicKey(mintAddress);
   
     // Destination test account addresses 4 PDAs 4 Multisigs
     const distribution = [
-        { destination: "5i2hAe3MtpuArGjKoW3BDUP71HZEcuerGiibXoYjDi2R", amount: BigInt(100_000_000 * Math.pow(10, 9)) }, // 30% Liquidity multisig
+        { destination: "", amount: BigInt(100_000_000 * Math.pow(10, 9)) }, // 30% Liquidity multisig
 
     ];
   
@@ -151,7 +150,7 @@ import {
           connection,
           payer,                         // Wallet que paga la transacción
           mintPublicKey,                 // Token SPL (mint)
-          destinationPublicKey,                    // PDA (propietario del ATA)
+          destinationPublicKey,          // PDA (propietario del ATA)
           undefined,                     // Opciones de confirmación (opcional)
           TOKEN_2022_PROGRAM_ID,         // Programa de token (Token 2022)
           ASSOCIATED_TOKEN_PROGRAM_ID,   // Programa ATA
