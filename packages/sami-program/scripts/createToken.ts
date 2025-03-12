@@ -45,17 +45,15 @@ import {
     const mintKeypair = Keypair.generate();
     const mint = mintKeypair.publicKey;
     console.log("Mint public Key is: ", mint);
-  
-    // Fee basis points for transfers (100 = 1%)
-    const feeBasisPoints = 100;
+
     const decimals = 9;
   
     const metaData: TokenMetadata = {
       updateAuthority: mintAuthority.publicKey,
       mint: mint,
-      name: 'Loft',
-      symbol: 'LOFT',
-      uri: 'https://ipfs.io/ipfs/bafkreiamdsoutoie3bhi3swu4xwwzl24qzqcfmxi3hvhm6r7ivxpdmm6ki?filename=tokenTestV1.json',
+      name: 'Usdt Mock',
+      symbol: 'USDT',
+      uri: 'https://ipfs.io/ipfs/?filename=',
       additionalMetadata: [['', '']],
     };
   
@@ -64,7 +62,6 @@ import {
     // Size of metadata
     const metadataLen = pack(metaData).length;
     const extensions = [
-      ExtensionType.TransferFeeConfig,
       ExtensionType.MetadataPointer,
     ];
   
@@ -75,9 +72,7 @@ import {
     const lamports = await connection.getMinimumBalanceForRentExemption(
       mintLen + metadataExtension + metadataLen,
     );
-    // 100 million aiming to not use it max Fee at all
-    const maxFee =  BigInt(1_000_000 * Math.pow(10, 9))
-  
+
     // Instruction to invoke System Program to create new account
     const createAccountInstruction = SystemProgram.createAccount({
       fromPubkey: payer.publicKey, // Account that will transfer lamports to created account
@@ -114,22 +109,10 @@ import {
       symbol: metaData.symbol,
       uri: metaData.uri,
     });
-    const multisigBeneficiary = new PublicKey("5i2hAe3MtpuArGjKoW3BDUP71HZEcuerGiibXoYjDi2R");
-    
-    const initializeTransferFeeConfig =
-    createInitializeTransferFeeConfigInstruction(
-      mint, // Mint Account address
-      null, // Authority to update fees
-      multisigBeneficiary, // Authority to withdraw fees
-      feeBasisPoints, // Basis points for transfer fee calculation // Maximum fee per transfer
-      maxFee,
-      TOKEN_2022_PROGRAM_ID, // TokenčExtension Program ID
-    );
 
     const transaction = new Transaction().add(
       createAccountInstruction,
       initializeMetadataPointerInstruction,
-      initializeTransferFeeConfig,
       // note: the above instructions are required before initializing the mint
       initializeMintInstruction,
       initializeMetadataInstruction,
