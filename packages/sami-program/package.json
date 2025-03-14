@@ -2,6 +2,7 @@
   "license": "ISC",
   "scripts": {
     "initialize": "npx ts-node scripts/initialize.ts",
+    "enter-game": "npx ts-node scripts/enterGame.ts",
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
     "deploy": "npx ts-node scripts/index.ts"
