@@ -17,7 +17,9 @@ pub struct EnterGame<'info> {
     pub player: Signer<'info>,
     #[account(mut)]
     pub game_state: Account<'info, GameState>,
-    // CHECK: Vault PDA that stores the funds
+
+    /// CHECK: This is a PDA derived from the game state and controlled by the program.
+    /// We assume it's valid because the seeds are verified in `#[account(seeds = ...)]`.
     #[account(mut, seeds = [b"vault", game_state.key().as_ref()], bump)]
     pub vault: UncheckedAccount<'info>,
 }
