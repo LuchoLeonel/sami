@@ -35,8 +35,9 @@ pub struct SendPrizes<'info> {
     #[account(mut, seeds = [b"vault", game_state.key().as_ref()], bump)]
     pub vault: UncheckedAccount<'info>,
 
+    /// CHECK: Winner's account, assumes it is a valid Solana wallet
     #[account(mut)]
-    pub winner: SystemAccount<'info>, // Assume that the winner is a Solana account
+    pub winner: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>, // Needed for SOL transfers
 }
