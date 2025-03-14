@@ -14,7 +14,7 @@ pub use events::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("4Sdd8MKvmN7YXkFpPPijfur3DaDkQ72kipn68XuC7bSc");
+declare_id!("79B1S7BVpw2DucU74pZZK2SAZTBfe7w16gd52SfcoopZ");
 
 #[program]
 pub mod sami_program {
