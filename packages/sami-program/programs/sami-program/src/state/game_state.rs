@@ -3,5 +3,5 @@ use anchor_lang::prelude::*;
 #[account]
 pub struct GameState {
     pub owner: Pubkey,
-    pub bet_amount: u64, // Monto de la apuesta
+    pub bet_amount: u64, // Bet amount
 }
