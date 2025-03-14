@@ -1,49 +1,32 @@
-use anchor_lang::prelude::*;
-use anchor_spl::token::{transfer, Token, TokenAccount, Transfer};
-
-use crate::errors::SimpleSAMIError;
-use crate::state::SimpleSAMI;
-
-#[derive(Accounts)]
-pub struct EnterGame<'info> {
-    #[account(mut)]
-    pub player: Signer<'info>,
-
-    #[account(
-        mut,
-        constraint = game_state.owner == owner.key()
-    )]
-    pub game_state: Account<'info, SimpleSAMI>,
-
-    #[account(
-        mut,
-        token::mint = game_state.usdc_mint,
-        token::authority = player
-    )]
-    pub player_token_account: Account<'info, TokenAccount>,
-
-    #[account(
-        mut,
-        token::mint = game_state.usdc_mint
-    )]
-    pub vault_account: Account<'info, TokenAccount>,
-
-    pub token_program: Program<'info, Token>,
-}
+use crate::*;
 
 pub fn enter_game(ctx: Context<EnterGame>) -> Result<()> {
-    let game_state = &ctx.accounts.game_state;
-    let bet_amount = game_state.bet_amount;
+    let bet_amount = ctx.accounts.game_state.bet_amount;
+    let player_lamports = ctx.accounts.player.to_account_info().lamports();
 
-    let cpi_accounts = Transfer {
-        from: ctx.accounts.player_token_account.to_account_info(),
-        to: ctx.accounts.vault_account.to_account_info(),
-        authority: ctx.accounts.player.to_account_info(),
-    };
+    // Verify if the player has enough SOL
+    require!(
+        player_lamports >= bet_amount,
+        SimpleSAMIError::InsufficientFunds
+    );
 
-    let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
+    // Transfer SOL to the vault
+    **ctx
+        .accounts
+        .vault
+        .to_account_info()
+        .try_borrow_mut_lamports()? += bet_amount;
+    **ctx
+        .accounts
+        .player
+        .to_account_info()
+        .try_borrow_mut_lamports()? -= bet_amount;
 
-    transfer(cpi_ctx, bet_amount).map_err(|_| SimpleSAMIError::TransferFailed.into())?;
+    // Emit event
+    emit!(GameEntered {
+        player: ctx.accounts.player.key(),
+        amount: bet_amount,
+    });
 
     Ok(())
 }

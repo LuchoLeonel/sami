@@ -1,64 +1,67 @@
-use crate::state::GameState;
-use anchor_lang::prelude::*;
-use anchor_spl::token::{Token, TokenAccount}; // Si `GameState` está en `state/`
+use crate::*;
 
-/// **Contexto para inicializar el contrato**
+// Context to initialize the contract
 #[derive(Accounts)]
 pub struct Initialize<'info> {
     #[account(init, payer = owner, space = 8 + 32 + 32 + 8)]
-    pub game_state: Account<'info, GameState>, // Guarda la configuración inicial del juego
+    pub game_state: Account<'info, GameState>, // Save the initial configuration of the game
     #[account(mut)]
-    pub owner: Signer<'info>, // Admin que inicializa el contrato
-    pub system_program: Program<'info, System>, // Programa del sistema
+    pub owner: Signer<'info>, // Admin that initialize the contract
+    pub system_program: Program<'info, System>,
 }
 
-/// **Contexto para que un jugador entre al juego**
+// Context for a player to enter the game
 #[derive(Accounts)]
 pub struct EnterGame<'info> {
     #[account(mut)]
-    pub game_state: Account<'info, GameState>,
-    #[account(mut)]
     pub player: Signer<'info>,
     #[account(mut)]
-    pub player_token_account: Account<'info, TokenAccount>,
-    #[account(mut)]
-    pub game_vault: Account<'info, TokenAccount>,
-    pub token_program: Program<'info, Token>,
+    pub game_state: Account<'info, GameState>,
+    // CHECK: Vault PDA that stores the funds
+    #[account(mut, seeds = [b"vault", game_state.key().as_ref()], bump)]
+    pub vault: UncheckedAccount<'info>,
 }
 
-/// **Contexto para que el admin envíe premios**
+// Context for the instruction SendPrizes()
 #[derive(Accounts)]
 pub struct SendPrizes<'info> {
-    #[account(mut, has_one = owner)]
-    pub game_state: Account<'info, GameState>,
-    #[account(mut)]
-    pub game_vault: Account<'info, TokenAccount>,
-    #[account(mut)]
-    pub winner_token_account: Account<'info, TokenAccount>,
     #[account(mut)]
     pub owner: Signer<'info>,
-    pub token_program: Program<'info, Token>,
-}
 
-/// **Contexto para que el admin cambie la apuesta**
-#[derive(Accounts)]
-pub struct SetBet<'info> {
-    #[account(mut, has_one = owner)]
-    pub game_state: Account<'info, GameState>,
     #[account(mut)]
-    pub owner: Signer<'info>,
+    pub game_state: Account<'info, GameState>,
+
+    /// CHECK: Vault PDA que almacena los fondos
+    #[account(mut, seeds = [b"vault", game_state.key().as_ref()], bump)]
+    pub vault: UncheckedAccount<'info>,
+
+    #[account(mut)]
+    pub winner: SystemAccount<'info>, // Assume that the winner is a Solana account
+
+    pub system_program: Program<'info, System>, // Needed for SOL transfers
 }
 
-/// **Contexto para retirar fondos**
+// Context for the instruction `withdraw()`
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
-    #[account(mut, has_one = owner)]
-    pub game_state: Account<'info, GameState>,
     #[account(mut)]
-    pub game_vault: Account<'info, TokenAccount>,
+    pub owner: Signer<'info>, // Only the owner can withdraw
     #[account(mut)]
-    pub owner_token_account: Account<'info, TokenAccount>,
+    pub game_state: Account<'info, GameState>, // State of the game
+    /// CHECK: Vault PDA that hold the funds
+    #[account(mut, seeds = [b"vault", game_state.key().as_ref()], bump)]
+    pub vault: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+// Context for the instruction SetBetAmount()
+#[derive(Accounts)]
+pub struct SetBetAmount<'info> {
     #[account(mut)]
-    pub owner: Signer<'info>,
-    pub token_program: Program<'info, Token>,
+    pub owner: Signer<'info>, // Only the owner can change the bet amount
+    #[account(
+        mut,
+        constraint = game_state.owner == owner.key()  // Only the owner can change it 
+    )]
+    pub game_state: Account<'info, GameState>, // State of the game to save bet amount
 }

@@ -1,45 +1,36 @@
-use anchor_lang::prelude::*;
-use anchor_spl::token::{transfer, Token, TokenAccount, Transfer};
+use crate::*;
 
-use crate::errors::SimpleSAMIError;
-use crate::state::SimpleSAMI;
+pub fn send_prizes(
+    ctx: Context<SendPrizes>,
+    winners: Vec<Pubkey>,
+    prize_amount: u64,
+) -> Result<()> {
+    let vault_balance = ctx.accounts.vault.to_account_info().lamports();
+    let num_winners = winners.len() as u64;
 
-#[derive(Accounts)]
-pub struct SendPrizes<'info> {
-    #[account(mut)]
-    pub owner: Signer<'info>,
+    require!(num_winners > 0, SimpleSAMIError::NoWinners);
+    require!(
+        vault_balance >= num_winners * prize_amount,
+        SimpleSAMIError::InsufficientFunds
+    );
 
-    #[account(
-        mut,
-        constraint = game_state.owner == owner.key()
-    )]
-    pub game_state: Account<'info, SimpleSAMI>,
+    for winner in winners.iter() {
+        **ctx
+            .accounts
+            .vault
+            .to_account_info()
+            .try_borrow_mut_lamports()? -= prize_amount;
+        **ctx
+            .accounts
+            .winner
+            .to_account_info()
+            .try_borrow_mut_lamports()? += prize_amount;
 
-    #[account(
-        mut,
-        token::mint = game_state.usdc_mint
-    )]
-    pub vault_account: Account<'info, TokenAccount>,
-
-    #[account(
-        mut,
-        token::mint = game_state.usdc_mint
-    )]
-    pub winner_account: Account<'info, TokenAccount>,
-
-    pub token_program: Program<'info, Token>,
-}
-
-pub fn send_prizes(ctx: Context<SendPrizes>, prize_amount: u64) -> Result<()> {
-    let cpi_accounts = Transfer {
-        from: ctx.accounts.vault_account.to_account_info(),
-        to: ctx.accounts.winner_account.to_account_info(),
-        authority: ctx.accounts.owner.to_account_info(),
-    };
-
-    let cpi_ctx = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
-
-    transfer(cpi_ctx, prize_amount).map_err(|_| SimpleSAMIError::TransferFailed.into())?;
+        emit!(PrizeSent {
+            winner: *winner,
+            amount: prize_amount,
+        });
+    }
 
     Ok(())
 }

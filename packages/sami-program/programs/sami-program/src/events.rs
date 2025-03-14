@@ -1,20 +1,19 @@
 use anchor_lang::prelude::*;
 
-/// **Evento: Un jugador entra al juego**
+/// A player enters the game
 #[event]
 pub struct GameEntered {
-    pub player: Pubkey, // Dirección del jugador
-    pub timestamp: i64, // Momento en que ingresó al juego
+    pub player: Pubkey,
+    pub amount: u64,
 }
-
-/// **Evento: Se envían premios a los ganadores**
+/// Sending prizes to winners
 #[event]
 pub struct PrizeSent {
     pub winner: Pubkey, // Dirección del ganador
     pub amount: u64,    // Cantidad del premio
 }
 
-/// **Evento: Se cambia el monto de la apuesta**
+/// It changes the amount of the bet
 #[event]
 pub struct BetAmountChanged {
     pub new_bet: u64, // Nuevo monto de la apuesta
