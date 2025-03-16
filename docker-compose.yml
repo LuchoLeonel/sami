@@ -1,0 +1,44 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "5001:5001"
+    restart: always
+    networks:
+      - sami_network
+    env_file:
+      - .env
+    environment:
+      - HOST=0.0.0.0
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3001:3001"
+    restart: always
+    networks:
+      - sami_network
+    depends_on:
+      - backend
+    env_file:
+      - .env
+    environment:
+      - PORT=3001
+
+  ai-agent:
+    build: ./packages/eliza
+    ports:
+      - "3000:3000"
+    restart: always
+    networks:
+      - sami_network
+    env_file:
+      - .env
+
+networks:
+  sami_network:
+    driver: bridge

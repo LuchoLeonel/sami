@@ -1,0 +1,31 @@
+# dependencies
+node_modules
+packages/ai/eliza-starter/.env
+packages/ai/eliza-starter/model.gguf
+packages/ai/eliza-starter/data/db.sqlite
+
+# yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# eslint
+.eslintcache
+
+# misc
+.DS_Store
+
+# IDE
+.vscode
+.idea
+
+# cli
+dist
+
+data
+.env
+.sqlite
+.gguf
