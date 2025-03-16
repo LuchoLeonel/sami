@@ -5,5 +5,7 @@ pub fn set_bet_amount(ctx: Context<SetBetAmount>, new_bet_amount: u64) -> Result
 
     ctx.accounts.game_state.bet_amount = new_bet_amount;
 
+    msg!("BetAmountChanged: new_bet_amount = {}", new_bet_amount);
+
     Ok(())
 }
