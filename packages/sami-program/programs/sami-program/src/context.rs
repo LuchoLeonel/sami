@@ -11,6 +11,7 @@ pub struct Initialize<'info> {
 }
 
 // Context for a player to enter the game
+
 #[derive(Accounts)]
 pub struct EnterGame<'info> {
     #[account(mut)]
@@ -18,12 +19,13 @@ pub struct EnterGame<'info> {
     #[account(mut)]
     pub game_state: Account<'info, GameState>,
 
-    /// CHECK: This is a PDA derived from the game state and controlled by the program.
-    /// We assume it's valid because the seeds are verified in `#[account(seeds = ...)]`.
+    /// CHECK: Vault PDA where funds will be stored.
     #[account(mut, seeds = [b"vault", game_state.key().as_ref()], bump)]
     pub vault: UncheckedAccount<'info>,
-}
 
+    /// ✅ Required for transferring SOL
+    pub system_program: Program<'info, System>,
+}
 // Context for the instruction SendPrizes()
 #[derive(Accounts)]
 pub struct SendPrizes<'info> {

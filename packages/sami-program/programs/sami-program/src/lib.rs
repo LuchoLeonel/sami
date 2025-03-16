@@ -2,7 +2,6 @@ use anchor_lang::prelude::*;
 
 mod context;
 mod errors;
-mod events;
 mod instructions;
 mod state;
 
@@ -10,11 +9,10 @@ mod constants;
 pub use constants::*;
 pub use context::*;
 pub use errors::*;
-pub use events::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("79B1S7BVpw2DucU74pZZK2SAZTBfe7w16gd52SfcoopZ");
+declare_id!("BZniWBwyNJzUi4Ru1kS8w3Kej2rnNJpdP8sMFM11f4LE");
 
 #[program]
 pub mod sami_program {

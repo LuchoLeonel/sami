@@ -26,10 +26,7 @@ pub fn send_prizes(
             .to_account_info()
             .try_borrow_mut_lamports()? += prize_amount;
 
-        emit!(PrizeSent {
-            winner: *winner,
-            amount: prize_amount,
-        });
+        msg!("PrizeSent: winner = {}, amount = {}", winner, prize_amount);
     }
 
     Ok(())

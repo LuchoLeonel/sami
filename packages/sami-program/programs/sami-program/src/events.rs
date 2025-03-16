@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 /// A player enters the game
-#[event]
+#[event_cpi]
 pub struct GameEntered {
     pub player: Pubkey,
     pub amount: u64,

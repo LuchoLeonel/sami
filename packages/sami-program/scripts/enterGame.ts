@@ -8,8 +8,8 @@ dotenv.config();
 // Set devnet conection
 const CLUSTER_URL = process.env.CLUSTER_URL || "https://api.devnet.solana.com";
 const WALLET_KEYPAIR_PATH = process.env.WALLET_KEYPAIR_PATH || "~/.config/solana/test.json";
-const PROGRAM_ID = new PublicKey("79B1S7BVpw2DucU74pZZK2SAZTBfe7w16gd52SfcoopZ"); // ID del programa
-const GAME_STATE_PUBKEY = new PublicKey("3sJS1ubE65QhhLL1HhKBVAdxYWkaZgPdiSfKyWXb17it"); // Dirección del estado del juego
+const PROGRAM_ID = new PublicKey("BZniWBwyNJzUi4Ru1kS8w3Kej2rnNJpdP8sMFM11f4LE"); // ID del programa
+const GAME_STATE_PUBKEY = new PublicKey("3RNcct6MzEhxRWKFX1udneA47aBhtDiWB7J2ZZoVZi16"); // Dirección del estado del juego
 
 (async () => {
   console.log("joinning the game");

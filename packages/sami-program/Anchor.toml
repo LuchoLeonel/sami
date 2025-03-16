@@ -8,7 +8,7 @@ skip-lint = false
 sami_program = "4Sdd8MKvmN7YXkFpPPijfur3DaDkQ72kipn68XuC7bSc"
 
 [programs."https://api.devnet.solana.com"]
-sami_program = "79B1S7BVpw2DucU74pZZK2SAZTBfe7w16gd52SfcoopZ"
+sami_program = "BZniWBwyNJzUi4Ru1kS8w3Kej2rnNJpdP8sMFM11f4LE"
 
 [registry]
 url = "https://api.apr.dev"

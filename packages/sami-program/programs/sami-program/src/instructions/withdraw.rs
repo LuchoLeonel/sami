@@ -18,7 +18,6 @@ pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
         .to_account_info()
         .try_borrow_mut_lamports()? += amount;
 
-    emit!(WithdrawFromReserves { amount });
-
+    msg!("WithdrawFromReserves: amount = {}", amount);
     Ok(())
 }
